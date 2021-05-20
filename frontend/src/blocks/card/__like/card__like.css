@@ -1,0 +1,25 @@
+.card__like {    
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity ease .5s;
+  font-family: Inter;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+  background: none;
+  margin-bottom: 3px;
+}
+
+.card__like:hover {
+  opacity: .5;
+}
+
+.card__like::before {
+  content: '';
+  width: 21px;
+  height: 18px;
+  background: url(../../../images/card__like.svg) no-repeat center center;
+  background-size: 21px 18px;
+  display: block;
+}

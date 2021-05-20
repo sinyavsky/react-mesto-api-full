@@ -1,0 +1,15 @@
+.profile {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding-bottom: 36px;
+}
+
+@media screen and (min-width: 918px)
+{
+  .profile {
+    flex-flow: row;
+    justify-content: space-between;
+    padding-bottom: 51px;
+  }
+}

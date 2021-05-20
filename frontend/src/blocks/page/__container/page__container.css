@@ -1,0 +1,13 @@
+.page__container {
+  width: calc(100% - 38px);
+  max-width: 880px;
+  margin: 42px auto 0;
+  flex-grow: 1;
+}
+
+@media screen and (min-width: 918px)
+{
+  .page__container {
+    margin-top: 40px;
+  }
+}

@@ -1,0 +1,41 @@
+.profile__add {
+  border: 2px solid #fff;
+  width: 100%;
+  max-width: 282px;
+  background: none;
+  height: 50px;
+  margin-top: 33px;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity ease .5s;  
+}
+
+.profile__add::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url(../../../images/profile__add.svg) no-repeat center center;
+}
+
+.profile__add:hover {
+  opacity: .6;
+}
+
+@media screen and (min-width: 918px)
+{
+  .profile__add {
+    margin-top: 0;
+    width: 150px;
+  }
+  
+  .profile__add::before {
+    width: 22px;
+    height: 22px;
+    background-size: 22px 22px;
+  }
+}

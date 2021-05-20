@@ -1,0 +1,19 @@
+.header {
+  width: 100%;
+  max-width: 880px;
+  box-sizing: border-box;
+  padding: 28px 27px 30px;
+  border-bottom: 1px solid rgb(84 84 84 / 70%);
+  margin: 0 auto;
+  transition: padding ease .5s;
+}
+
+@media screen and (min-width: 918px)
+{
+  .header {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

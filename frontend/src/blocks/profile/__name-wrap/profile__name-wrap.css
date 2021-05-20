@@ -1,0 +1,11 @@
+.profile__name-wrap {
+  display: flex;
+  margin-left: 28px;
+}
+
+@media screen and (min-width: 918px)
+{
+  .profile__name-wrap {
+    margin-left: 0;
+  }
+}
