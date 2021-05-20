@@ -7,6 +7,7 @@ const { login, createUser } = require('./controllers/users');
 const { validateLogin, validateCreateUser } = require('./middlewares/validators');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,6 +22,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(requestLogger);
+
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
 app.use('/users', auth, require('./routes/users'));
@@ -29,6 +32,8 @@ app.use('/cards', auth, require('./routes/cards'));
 app.use((req, res, next) => {
   next(new NotFoundError('Запрошенный url не найден'));
 });
+
+app.use(errorLogger);
 
 // не знаю, нужно ли модифицировать вывод ошибок отсюда, пока не трогаю
 app.use(errors());
