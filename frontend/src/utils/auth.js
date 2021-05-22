@@ -7,6 +7,7 @@ class Auth {
   signUp = ({email, password}) => {
     return fetch(`${this.baseUrl}/signup`, {
       method: 'POST',
+      mode: 'no-cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -19,6 +20,7 @@ class Auth {
   signIn = ({email, password}) => {  
     return fetch(`${this.baseUrl}/signin`, {
       method: 'POST',
+      mode: 'no-cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -31,6 +33,7 @@ class Auth {
   getData = token => {
     return fetch(`${this.baseUrl}/users/me`, {
       method: 'GET',
+      mode: 'no-cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
