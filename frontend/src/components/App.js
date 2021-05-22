@@ -107,13 +107,13 @@ function App() {
         setCards(result);
       })
       .catch(err => console.log(err));
-  }, []);
+  }, [loggedIn]);
 
   useEffect(() => {
     api.getUserInfo()
       .then(result => setCurrentUser(result))
       .catch(err => console.log(err));
-  }, []);
+  }, [loggedIn]);
 
   useEffect(() => {
     checkToken()
@@ -141,9 +141,11 @@ function App() {
     return auth.signIn({email, password})
       .then((data) => {
         if(data.token) {
-          setLoggedIn(true);
-          setUserEmail(email);
           localStorage.setItem('token', data.token);
+          // чтобы после авторизации сразу подгрузилась вся инфа
+          api.updateToken(data.token);
+          setLoggedIn(true);
+          setUserEmail(email);          
           history.push('/');
         }
       })

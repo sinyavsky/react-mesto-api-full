@@ -107,6 +107,10 @@ class Api {
     });   
   }
   
+  updateToken(token) {
+    this.token = token;
+  }
+
 }
 
 const api = new Api({
