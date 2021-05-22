@@ -16,18 +16,6 @@ import api from '../utils/api.js';
 import auth from '../utils/auth.js';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
-/*
-  Привет!
-
-  Работа получилась такая себе, есть над чем поработать: как минимум не доделал
-  моб. верстку, не упорядочил код + не успел провести рефакторинг.
-
-  Но обязательную часть по брифу вроде сделал. Буду рад любым замечаниям, надеюсь успею
-  поправить критические до дедлайна :)
-
-  Хорошего дня!
-*/
-
 function App() {
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
