@@ -1,0 +1,9 @@
+.header__username {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  display: inline-block;
+  margin-right: 24px;
+}

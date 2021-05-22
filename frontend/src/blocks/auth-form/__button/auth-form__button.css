@@ -1,0 +1,25 @@
+.auth-form__button {
+  background-color: #fff;
+  border-radius: 2px;
+  width: 100%;
+  padding: 14px;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000;
+  border: 0;
+  transition: opacity ease .5s;
+  cursor: pointer;
+}
+
+.auth-form__button:hover {
+  opacity: .85;
+}
+
+@media screen and (min-width: 768px) {
+  .auth-form__button {
+    font-size: 18px;
+    line-height: 22px;
+  }
+}

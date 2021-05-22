@@ -1,12 +1,27 @@
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../images/logo.svg';
 
 
-function Header() {
+function Header({loggedIn, userEmail, onLogout}) {
+  const currentPath = useLocation().pathname;
+
   return (
     <header className="header">
-      <a href="index.html">
+      <Link to="/">
         <img src={logo} alt="Место" className="header__logo" />
-      </a>
+      </Link>
+
+      { loggedIn ?
+        ( <div className="header__personal">
+            <span className="header__username">{userEmail}</span>
+            <button className="header__logout" onClick={onLogout}>Выйти</button>
+        </div>
+        ):
+        (currentPath === '/signin' ?
+          <Link to="/signup" className="header__auth-link">Регистрация</Link> :
+          <Link to="/signin" className="header__auth-link">Войти</Link> 
+        )
+      }
     </header>
   );
 }

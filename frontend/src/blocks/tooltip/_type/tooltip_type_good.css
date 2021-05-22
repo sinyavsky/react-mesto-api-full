@@ -1,0 +1,3 @@
+.tooltip_type_good::before {
+  background-image: url(./../../../images/tooltip_type_good.svg);
+}

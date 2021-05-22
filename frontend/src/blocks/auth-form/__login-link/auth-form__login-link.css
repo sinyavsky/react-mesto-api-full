@@ -1,0 +1,15 @@
+.auth-form__login-link {
+  font-family: Inter;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  margin-top: 20px;
+  transition: opacity ease .5s;
+}
+
+.auth-form__login-link:hover {
+  opacity: .6;
+}

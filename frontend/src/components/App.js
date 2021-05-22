@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute.js';
 import Header from './Header.js';
+import Login from './Login.js';
+import Register from './Register.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
 import PopupWithForm from './PopupWithForm.js';
@@ -7,18 +11,38 @@ import ImagePopup from './ImagePopup.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
+import InfoTooltip from './InfoTooltip.js';
 import api from '../utils/api.js';
+import auth from '../utils/auth.js';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
+/*
+  Привет!
+
+  Работа получилась такая себе, есть над чем поработать: как минимум не доделал
+  моб. верстку, не упорядочил код + не успел провести рефакторинг.
+
+  Но обязательную часть по брифу вроде сделал. Буду рад любым замечаниям, надеюсь успею
+  поправить критические до дедлайна :)
+
+  Хорошего дня!
+*/
 
 function App() {
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [currentUser, setCurrentUser] = useState({name: '', about: ''});
+
+  const history = useHistory();
+
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -40,6 +64,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setIsTooltipOpen(false);
     setSelectedCard({});
   }
 
@@ -102,19 +127,96 @@ function App() {
       .catch(err => console.log(err));
   }, []);
 
+  useEffect(() => {
+    checkToken()
+  }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      history.push('/');
+    }
+  }, [loggedIn]);
+
+  const checkToken = () => {
+    if(localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+      auth.getData(token).then(({data}) => {
+        if (data.email) {
+          setLoggedIn(true);
+          setUserEmail(data.email);
+        }
+      });
+    }
+  }
+
+  const handleLogin = ({ email, password }) => {
+    return auth.signIn({email, password})
+      .then((data) => {
+        if(data.token) {
+          setLoggedIn(true);
+          setUserEmail(email);
+          localStorage.setItem('token', data.token);
+          history.push('/');
+        }
+      })
+      .catch((errorText) => {
+        // в ТЗ нет инфы про обработку ошибок логина, пока делаю так
+        console.log(errorText);
+      });
+  }
+
+  const handleRegister = ({ email, password }) => {
+    return auth.signUp({email, password})
+      .then(({data}) => {
+        if(data.email) {
+          setRegisterSuccess(true);
+          setIsTooltipOpen(true);        
+        }
+      })
+      .catch(() => {
+        setRegisterSuccess(false);
+        setIsTooltipOpen(true); 
+      });
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    history.push('/signin');
+  }
+
+  const closeTooltipPopup = () => {
+    closeAllPopups();
+    // если регистрация успешна - после закрытия попапа сразу редиректим к авторизации
+    if(registerSuccess) {
+      history.push('/signin');
+    }
+    
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header />
+      <Header loggedIn={loggedIn} userEmail={userEmail} onLogout={handleLogout} />
 
-      <Main
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-        onEditAvatar={handleEditAvatarClick}
-        onCardClick={handleCardClick}
-        cards={cards}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
-      />
+      <Switch>
+        <Route path="/signup">
+          <Register onRegister={handleRegister}/>
+        </Route>
+        <Route path="/signin">
+          <Login onLogin={handleLogin}/>
+        </Route>
+        <ProtectedRoute
+          loggedIn={loggedIn}
+          component={Main}
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          onCardClick={handleCardClick}
+          cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+        />
+      </Switch>      
 
       <Footer />
 
@@ -123,6 +225,10 @@ function App() {
       <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       <PopupWithForm name="confirm" title="Вы уверены?" />
+      {
+        // не выношу его в компонент Register, т.к. мб в будущем тултип будет использоваться и для других целей
+      }
+      <InfoTooltip success={registerSuccess} onClose={closeTooltipPopup} isOpen={isTooltipOpen} />
 
     </CurrentUserContext.Provider>
   );
