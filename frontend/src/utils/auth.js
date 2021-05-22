@@ -7,7 +7,6 @@ class Auth {
   signUp = ({email, password}) => {
     return fetch(`${this.baseUrl}/signup`, {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -20,7 +19,6 @@ class Auth {
   signIn = ({email, password}) => {  
     return fetch(`${this.baseUrl}/signin`, {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -33,7 +31,6 @@ class Auth {
   getData = token => {
     return fetch(`${this.baseUrl}/users/me`, {
       method: 'GET',
-      mode: 'no-cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -43,7 +40,15 @@ class Auth {
     .then(this.checkResponse);
   }
 
-  checkResponse = res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.statusText}`);
+  checkResponse = res => {
+    if(res.ok) {
+      return res.json();
+    }
+    return res.json().then(errorInfo => {
+      const { message = 'Произошла неизвестная ошибка' } = errorInfo;      
+      return Promise.reject(`Ошибка: ${message}`);     
+    });
+  }
 }
 
 const auth = new Auth({ baseUrl: 'https://api.mesto.sinyavsky.com' }); 

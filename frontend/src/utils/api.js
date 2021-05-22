@@ -1,21 +1,17 @@
+import { getAuthToken } from '../utils/utils.js';
+
 class Api {
 
-  constructor({baseUrl}) {
+  constructor({baseUrl, token}) {
     this.baseUrl = baseUrl;
-    this.token = ''; // раньше токен передавался в конструкторе, но времена поменялись
-  }
-
-  // поэтому добавляю этот метод, чтобы не переписывать все остальные
-  setToken(token) {
     this.token = token;
   }
 
   _makeRequest({method, path, contentType=null, body=null}) {     
     const options = {
       method: method,
-      mode: 'no-cors',
       headers: {
-        'Authorization' : `Bearer ${this.token}`
+        'Authorization': `Bearer ${this.token}`
       }
     };
 
@@ -32,7 +28,10 @@ class Api {
         if(res.ok) {
           return res.json();
         }
-        return Promise.reject(`Ошибка: ${res.status} - ${res.statusText}`);
+        return res.json().then(errorInfo => {
+          const { message = 'Произошла неизвестная ошибка' } = errorInfo;      
+          return Promise.reject(`Ошибка: ${message}`);     
+        });
       });    
   }  
 
@@ -72,7 +71,7 @@ class Api {
 
   // карточки
 
-  getInitialCards() {
+  getInitialCards(token) {
     return this._makeRequest({
       method: 'GET',
       path: '/cards'
@@ -104,14 +103,15 @@ class Api {
   changeLikeCardStatus(cardId, isLiked) {
     return this._makeRequest({
       method: isLiked ? 'PUT' : 'DELETE',
-      path: `/cards/likes/${cardId}`
+      path: `/cards/${cardId}/likes`
     });   
   }
   
 }
 
 const api = new Api({
-  baseUrl: 'https://api.mesto.sinyavsky.com'
+  baseUrl: 'https://api.mesto.sinyavsky.com',
+  token: getAuthToken()
 }); 
 
 export default api;

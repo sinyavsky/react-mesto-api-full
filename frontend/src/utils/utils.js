@@ -1,3 +1,7 @@
-/*
-  Без этого файла автотесты Яндекса не дают отправить работу на проверку 
-*/
+const getAuthToken = () => {
+  return localStorage.getItem('token');
+}
+
+export {
+  getAuthToken
+};

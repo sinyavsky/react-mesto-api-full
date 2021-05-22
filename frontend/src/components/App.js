@@ -14,6 +14,7 @@ import AddPlacePopup from './AddPlacePopup.js';
 import InfoTooltip from './InfoTooltip.js';
 import api from '../utils/api.js';
 import auth from '../utils/auth.js';
+import { getAuthToken } from '../utils/utils.js';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
-  const [currentUser, setCurrentUser] = useState({name: '', about: ''});
+  const [currentUser, setCurrentUser] = useState({name: '', about: '', _id: ''});
 
   const history = useHistory();
 
@@ -84,8 +85,7 @@ function App() {
   }
 
   const handleCardLike = card => {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    
+    const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
@@ -126,12 +126,12 @@ function App() {
   }, [loggedIn]);
 
   const checkToken = () => {
-    if(localStorage.getItem('token')) {
-      const token = localStorage.getItem('token');
-      auth.getData(token).then(({data}) => {
-        if (data.email) {
+    const token = getAuthToken();
+    if(token) {
+      auth.getData(token).then(({email}) => {
+        if (email) {
           setLoggedIn(true);
-          setUserEmail(data.email);
+          setUserEmail(email);
         }
       });
     }
@@ -144,7 +144,6 @@ function App() {
           setLoggedIn(true);
           setUserEmail(email);
           localStorage.setItem('token', data.token);
-          api.setToken(data.token); // прокидываем токен в апи
           history.push('/');
         }
       })
@@ -156,15 +155,16 @@ function App() {
 
   const handleRegister = ({ email, password }) => {
     return auth.signUp({email, password})
-      .then(({data}) => {
-        if(data.email) {
+      .then(({email}) => {
+        if(email) {
           setRegisterSuccess(true);
           setIsTooltipOpen(true);        
         }
       })
-      .catch(() => {
+      .catch((error) => {
         setRegisterSuccess(false);
         setIsTooltipOpen(true); 
+        console.log(error);
       });
   }
 
