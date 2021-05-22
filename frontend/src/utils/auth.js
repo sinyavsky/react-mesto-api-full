@@ -43,6 +43,6 @@ class Auth {
   checkResponse = res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.statusText}`);
 }
 
-const auth = new Auth({ baseUrl: 'https://auth.nomoreparties.co' }); 
+const auth = new Auth({ baseUrl: 'https://api.mesto.sinyavsky.com' }); 
 
 export default auth;

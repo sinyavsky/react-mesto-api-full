@@ -6,7 +6,8 @@ class Api {
 
   _makeRequest({method, path, contentType=null, body=null}) {     
     const options = {
-      method: method
+      method: method,
+      mode: 'no-cors'
     };
 
     if(contentType) {
