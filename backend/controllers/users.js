@@ -148,11 +148,7 @@ module.exports.login = (req, res, next) => {
         'super-very-secret-keyyyyy', // в след. спринте вынесем в .env
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, {
-        maxAge: 604800000, // 1 неделя
-        httpOnly: true,
-      })
-        .end();
+      res.send({ token });
     })
     .catch(next);
 };

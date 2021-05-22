@@ -1,7 +1,12 @@
 class Api {
 
-  constructor({baseUrl, token}) {
+  constructor({baseUrl}) {
     this.baseUrl = baseUrl;
+    this.token = ''; // раньше токен передавался в конструкторе, но времена поменялись
+  }
+
+  // поэтому добавляю этот метод, чтобы не переписывать все остальные
+  setToken(token) {
     this.token = token;
   }
 
@@ -10,7 +15,7 @@ class Api {
       method: method,
       mode: 'no-cors',
       headers: {
-        authorization: this.token
+        'Authorization' : `Bearer ${this.token}`
       }
     };
 
@@ -106,8 +111,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-20',
-  token: '8c32355f-4347-4868-8ec7-20db7d4995bd'
+  baseUrl: 'https://api.mesto.sinyavsky.com'
 }); 
 
 export default api;

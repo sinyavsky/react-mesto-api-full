@@ -144,6 +144,7 @@ function App() {
           setLoggedIn(true);
           setUserEmail(email);
           localStorage.setItem('token', data.token);
+          api.setToken(data.token); // прокидываем токен в апи
           history.push('/');
         }
       })
